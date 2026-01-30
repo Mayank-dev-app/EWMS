@@ -32,7 +32,7 @@ const EmployeeList = () => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "http://localhost:5000/api/admin/employees-list",
+          "https://ewms-537h.onrender.com/api/admin/employees-list",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -61,7 +61,7 @@ const EmployeeList = () => {
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `http://localhost:5000/api/admin/employee/${deleteId}`,
+        `https://ewms-537h.onrender.com/api/admin/employee/${deleteId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
