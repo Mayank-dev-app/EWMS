@@ -5,32 +5,53 @@ require("./Confige/mongoDataBase");
 
 const app = express();
 
+// ✅ Allowed origins
+const allowedOrigins = [
+  "http://localhost:5173",        // local frontend (Vite)
+  "https://ewms26.netlify.app/", // production frontend
+];
+
+// ✅ CORS config
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (Postman, mobile apps)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
 // Middlewares
-app.use(cors());
 app.use(express.json());
 
-// ------------------ AUTH ROUTES ------------------
-app.use("/api/auth", require("./Routes/Auth"));  
+/* ------------------ ROUTES ------------------ */
 
+app.use("/api/auth", require("./Routes/Auth"));
 
-// ------------------ ADMIN ROUTES ------------------
-app.use("/api/admin", require("./Routes/Admin/Admin"));              // Admin main routes
-app.use("/api/admin", require("./Routes/Admin/AdminEmpManager"));    // Employee + Manager create
-app.use("/api/admin", require("./Routes/Admin/AdminDepartment"));    // Department CRUD
+app.use("/api/admin", require("./Routes/Admin/Admin"));
+app.use("/api/admin", require("./Routes/Admin/AdminEmpManager"));
+app.use("/api/admin", require("./Routes/Admin/AdminDepartment"));
 app.use("/api/admin", require("./Routes/Admin/AdminTask"));
 
+app.use("/api/manager", require("./Routes/Manager/AssignTask"));
+app.use("/api/manager", require("./Routes/Manager/Showlist"));
+app.use("/api/manager", require("./Routes/Manager/TaskReport"));
 
-// ------------------ MANAGER ROUTES ------------------
-app.use("/api/manager", require("./Routes/Manager/AssignTask"));   // Assign Task
-app.use("/api/manager", require("./Routes/Manager/Showlist"));     // Show task list (by manager)
-app.use("/api/manager/", require("./Routes/Manager/TaskReport"));  //Report List
-
-// ----------------- EMPLOYEE ROUTES --------------------
 app.use("/api/employee", require("./Routes/Employee/EmpTask"));
 
-
-// ---------------- GLOBAL ROUTE ------------------------
 app.use("/api/global", require("./Routes/Global"));
 
-// -----------------------------------------------------
-app.listen(5000, () => console.log("🚀 Server running on port 5000"));
+/* ------------------ SERVER ------------------ */
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on port ${PORT}`)
+);
