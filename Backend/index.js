@@ -9,7 +9,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",        // local frontend (Vite)
   "https://ewms25.netlify.app/login", // production frontend
-  "https://ewms25.netlify.app",
+  "https://ewms25.netlify.app/",
 ];
 
 // ✅ CORS config
