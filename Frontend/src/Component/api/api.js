@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://ewms-537h.onrender.com/api",
 });
 
 // attach token from localStorage for each request
